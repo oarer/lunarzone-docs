@@ -9,7 +9,13 @@ const outDir = path.join(root, "dist");
 
 const CANVAS_DIR = path.join(root, "canvas");
 const ATTACHMENTS_DIR = path.join(root, "attachments");
-const STATIC_FILES = ["index.html", "styles.css", "app.js", ".nojekyll"];
+const STATIC_FILES = [
+	"index.html",
+	"styles.css",
+	"app.js",
+	".nojekyll",
+	"canvases.json",
+];
 
 async function walk(dir) {
 	let found = [];
@@ -70,6 +76,13 @@ async function main() {
 		console.warn("⚠  В папке canvas/ не найдено ни одного .canvas файла.");
 	}
 
+	// Manifest is committed at the repo root so that a branch deploy
+	// (Settings -> Pages -> Deploy from a branch -> /) works as well.
+	await fs.writeFile(
+		path.join(root, "canvases.json"),
+		`${JSON.stringify({ canvases }, null, "\t")}\n`,
+	);
+
 	await fs.rm(outDir, { recursive: true, force: true });
 	await fs.mkdir(outDir, { recursive: true });
 
@@ -90,12 +103,7 @@ async function main() {
 		await copyInto(ATTACHMENTS_DIR, "attachments");
 	} catch {}
 
-	await fs.writeFile(
-		path.join(outDir, "canvases.json"),
-		`${JSON.stringify({ canvases }, null, "\t")}\n`,
-	);
-
-	console.log(`✔ Собрано в dist/: ${canvases.length} canvas(ов)`);
+	console.log(`✔ Собрано в dist/ и обновлён canvases.json: ${canvases.length} canvas(ов)`);
 	for (const c of canvases) console.log(`  • ${c.title}  →  /?canvas=${c.slug}`);
 }
 
