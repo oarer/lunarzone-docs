@@ -1,4 +1,4 @@
-# Canvas Pages
+# lunarzone-docs
 
 Публикация файлов Obsidian `.canvas` как интерактивного сайта на GitHub Pages.
 Рендеринг выполняет [`json-canvas-viewer`](https://github.com/hesprs/json-canvas-viewer)
