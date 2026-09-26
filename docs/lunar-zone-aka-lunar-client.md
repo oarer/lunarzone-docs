@@ -5,8 +5,8 @@
 | --- | ---------------- |
 | **Oarer / оарер** | Владелец stalhub, автор досье |
 | **Mamoru / мамору** | Владелец / разработчик lunar-zone / lunar-client |
-| **NeTataLon / аид** | Посредник в переговорах |
 | **stalhub.dev** | Пострадавшая сторона |
+| **посредник** | Человек предпочёл не раскрывать свою личность |
 
 - Время: МСК = UTC+3. В логах время указано в UTC — разница с МСК составляет 3 часа (например, `17:50 UTC` = `20:50 МСК`).
 
@@ -301,7 +301,7 @@ IP — 81.163.133.244 (mamoru)
 
 > Экспорт чатов:
 > - [Пупупу](static/exports/ChatExport_2026-09-26_new.zip)
-> - [netatalon](static/exports/ChatExport_2026-09-26_netatalon.zip)
+> - [посредник](static/exports/ChatExport_2026-09-26_посредник.zip)
 
 ## 1. Хронология
 
@@ -313,13 +313,13 @@ IP — 81.163.133.244 (mamoru)
 - **24.08 17:28 MSK** — ответ поддержки Aeza в тикете №47197 стороне lunar: `нарушений за сервером нет`.
 - **24.08** — mamoru фиксирует хеши своих данных sysstat (`sa20-sa24`).
 - **25.08 13:54 MSK** — ответ oarer\`у Dept. Abuse (Александр З., Aeza) заявителю oarer: `We have sent a demand to the server owner to cease this activity. In case of refusal or inaction... restrict access`.
-- **21.09** — netatalon пишет мне (oarer`у)
+- **21.09** — посредник пишет мне (oarer`у)
 
 ![[Pasted image 20260925213338.png|309]]![[Pasted image 20260925213350.png|133]]
 
-- И пересылает два сообщения от mamoru (см. [ChatExport_2026-09-26_netatalon.zip](static/exports/ChatExport_2026-09-26_netatalon.zip))
+- И пересылает два сообщения от mamoru (см. [ChatExport_2026-09-26_посредник.zip](static/exports/ChatExport_2026-09-26_посредник.zip))
 
-- **22–25.09** — создаётся отдельный чат netatalon+mamoru+oarer (см. [ChatExport_2026-09-26_new.zip](static/exports/ChatExport_2026-09-26_new.zip))
+- **22–25.09** — создаётся отдельный чат посредник+mamoru+oarer (см. [ChatExport_2026-09-26_new.zip](static/exports/ChatExport_2026-09-26_new.zip))
 
 ## 2. Цитаты oarer
 
@@ -403,7 +403,7 @@ IP — 81.163.133.244 (mamoru)
 
 ## 5. Нет отрицания атаки
 
-Первое сообщение mamoru от 21.09 (их переслал netatalon, см. [ChatExport_2026-09-26_netatalon.zip](static/exports/ChatExport_2026-09-26_netatalon.zip)), нет отрицания атаки.
+Первое сообщение mamoru от 21.09 (их переслал посредник, см. [ChatExport_2026-09-26_посредник.zip](static/exports/ChatExport_2026-09-26_посредник.zip)), нет отрицания атаки.
 
 Структура сообщения:
 
@@ -454,7 +454,7 @@ IP — 81.163.133.244 (mamoru)
 
 - Atiq — помощь в поиске информации, разбор ситуации
 - Bupyc и Gudilator — предоставление доп. информации
-- Netatalon и Артемий лапа — продвижение ситуации
+- Артемий лапа — продвижение ситуации
 
 ---
 
