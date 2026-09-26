@@ -4,30 +4,81 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 	<meta name="color-scheme" content="light dark" />
-	<title>lunarzone-docs</title>
-	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='3' y='3' width='8' height='8' rx='2' fill='%2353dfdd'/%3E%3Crect x='13' y='13' width='8' height='8' rx='2' fill='%23a882ff'/%3E%3Cpath d='M11 7h4a2 2 0 0 1 2 2v4' fill='none' stroke='%23888' stroke-width='1.6'/%3E%3C/svg%3E" />
+	<title>lunarzone | stalhub.dev</title>
+	<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='3' y='3' width='8' height='8' rx='2' fill='%233b82f6'/%3E%3Crect x='13' y='13' width='8' height='8' rx='2' fill='%2338bdf8'/%3E%3Cpath d='M11 7h4a2 2 0 0 1 2 2v4' fill='none' stroke='%23888' stroke-width='1.6'/%3E%3C/svg%3E" />
 	<link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 	<header class="topbar">
 		<div class="topbar-left">
-			<h1 class="brand">lunarzone-docs</h1>
+			<a class="brand" href="?view=home">lunarzone</a>
+			<button id="nav-toggle" class="btn nav-toggle" type="button" aria-label="Открыть меню" aria-expanded="false"><i data-lucide="menu" data-size="20"></i></button>
+			<nav class="nav" id="main-nav" aria-label="Разделы">
+				<a class="nav-link" data-nav="home" href="?view=home"><i data-lucide="house" data-size="17"></i><span>Главная</span></a>
+				<a class="nav-link" data-nav="doc" id="nav-doc" href="?view=doc"><i data-lucide="file-text" data-size="17"></i><span>Досье</span></a>
+				<a class="nav-link" data-nav="canvas" id="nav-canvas" href="?view=canvas"><i data-lucide="network" data-size="17"></i><span>Canvas-схема</span></a>
+			</nav>
+			<select id="doc-picker" class="picker" hidden aria-label="Выбор документа"></select>
 			<select id="canvas-picker" class="picker" hidden aria-label="Выбор canvas"></select>
 		</div>
 		<div class="topbar-right">
-			<a id="open-raw" class="btn-link" href="#" title="Открыть исходный .canvas" target="_blank" rel="noopener">.canvas</a>
-			<button id="theme-toggle" class="btn" type="button" title="Сменить тему" aria-label="Сменить тему">
-				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.6 5.6l1.4 1.4m10 10 1.4 1.4m0-12.8-1.4 1.4m-10 10-1.4 1.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
-			</button>
+			<a id="open-raw" class="btn-link" href="https://github.com/oarer/lunarzone-docs" title="Открыть исходный файл" target="_blank" rel="noopener">Github</a>
+			<button id="theme-toggle" class="btn" type="button" title="Сменить тему" aria-label="Тёмная тема"><i data-lucide="moon" data-size="18"></i></button>
 		</div>
 	</header>
 
-	<main id="viewer" class="viewer" aria-live="polite"></main>
+	<main id="main">
+		<section id="view-home" class="home" hidden>
+			<div class="hero">
+				<h2 class='hero-title'>lunar-zone aka lunar-client</h2>
+				<p>Досье о конфликте между проектами stalhub и lunar-zone / lunar-client: DoS-атаки августа 2026 года, инфраструктура, аккаунты и разбор переписки.</p>
+			</div>
+			<div class="cards" id="home-cards"></div>
+			<iframe
+			  src="https://status.stalhub.dev/embed/monitor-stalhub?theme=dark&days=7"
+			  width="100%"
+			  height="70"
+			  style="border:0"
+			  title="StalHub status"
+			></iframe>
+			<div class="home-files">
+				<h3>Приложенные файлы</h3>
+				<div id="home-logs"></div>
+				<div id="home-exports"></div>
+			</div>
+		</section>
+
+		<div id="view-doc-wrap" class="doc-layout" hidden>
+			<button id="toc-toggle" class="btn toc-toggle" type="button" aria-label="Показать оглавление" aria-expanded="false"><i data-lucide="list" data-size="16"></i><span>Оглавление</span></button>
+			<aside id="toc" class="toc" aria-label="Оглавление">
+				<div class="toc-title">Оглавление</div>
+				<nav id="toc-nav"></nav>
+			</aside>
+			<article id="view-doc" class="prose" aria-live="polite"></article>
+		</div>
+
+		<div id="viewer" class="viewer" hidden aria-live="polite"></div>
+			<footer class="footer">stalhub.dev</footer>
+	</main>
 
 	<div id="status" class="status" hidden>
 		<div class="status-card">
 			<div class="spinner" id="status-spinner"></div>
 			<p id="status-text">Загрузка…</p>
+		</div>
+	</div>
+
+	<div id="lightbox" class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Просмотр изображения">
+		<button id="lb-close" class="btn lb-btn lb-close" type="button" aria-label="Закрыть"><i data-lucide="x" data-size="22"></i></button>
+		<button id="lb-prev" class="btn lb-btn lb-prev" type="button" aria-label="Предыдущее изображение"><i data-lucide="chevron-left" data-size="26"></i></button>
+		<figure class="lb-figure">
+			<img id="lb-img" alt="" draggable="false">
+			<figcaption id="lb-cap"></figcaption>
+		</figure>
+		<button id="lb-next" class="btn lb-btn lb-next" type="button" aria-label="Следующее изображение"><i data-lucide="chevron-right" data-size="26"></i></button>
+		<div class="lb-zoombar">
+			<button id="lb-zoom-out" class="btn lb-btn" type="button" aria-label="Уменьшить"><i data-lucide="zoom-out" data-size="20"></i></button>
+			<button id="lb-zoom-in" class="btn lb-btn" type="button" aria-label="Увеличить"><i data-lucide="zoom-in" data-size="20"></i></button>
 		</div>
 	</div>
 

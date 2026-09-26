@@ -8,13 +8,19 @@ const root = path.resolve(__dirname, "..");
 const outDir = path.join(root, "dist");
 
 const CANVAS_DIR = path.join(root, "canvas");
+const DOCS_DIR = path.join(root, "docs");
+const LOGS_DIR = path.join(root, "logs");
+const EXPORTS_DIR = path.join(root, "static", "exports");
 const ATTACHMENTS_DIR = path.join(root, "attachments");
+const STATIC_DIR = path.join(root, "static");
 const STATIC_FILES = [
 	"index.html",
 	"styles.css",
 	"app.js",
 	".nojekyll",
 	"canvases.json",
+	"docs.json",
+	"site.json",
 ];
 
 async function walk(dir) {
@@ -64,6 +70,42 @@ async function collectCanvases() {
 	return canvases;
 }
 
+async function collectDocs() {
+	const files = (await walk(DOCS_DIR)).filter((f) =>
+		f.toLowerCase().endsWith(".md"),
+	);
+	files.sort();
+
+	const used = new Set();
+	const docs = [];
+	for (const file of files) {
+		const relative = path.relative(root, file).split(path.sep).join("/");
+		const raw = await fs.readFile(file, "utf8");
+		const h1 = raw.match(/^#\s+(.+?)\s*$/m);
+		const title = (h1?.[1] ?? path.basename(file, path.extname(file))).trim();
+		let slug = slugify(title);
+		let i = 2;
+		while (used.has(slug)) slug = `${slugify(title)}-${i++}`;
+		used.add(slug);
+		docs.push({ slug, title, file: relative });
+	}
+	return docs;
+}
+
+async function collectFiles(dir) {
+	const files = await walk(dir);
+	files.sort();
+	const out = [];
+	for (const file of files) {
+		const stat = await fs.stat(file);
+		if (!stat.isFile()) continue;
+		out.push({
+			file: path.relative(root, file).split(path.sep).join("/"),
+			size: stat.size,
+		});
+	}
+	return out;
+}
 async function copyInto(src, destRelative) {
 	const dest = path.join(outDir, destRelative);
 	await fs.mkdir(path.dirname(dest), { recursive: true });
@@ -75,12 +117,26 @@ async function main() {
 	if (canvases.length === 0) {
 		console.warn("⚠  В папке canvas/ не найдено ни одного .canvas файла.");
 	}
+	const docs = await collectDocs();
+	if (docs.length === 0) {
+		console.warn("⚠  В папке docs/ не найдено ни одного .md файла.");
+	}
+	const logs = await collectFiles(LOGS_DIR);
+	const exports_ = await collectFiles(EXPORTS_DIR);
 
-	// Manifest is committed at the repo root so that a branch deploy
+	// Manifests are committed at the repo root so that a branch deploy
 	// (Settings -> Pages -> Deploy from a branch -> /) works as well.
 	await fs.writeFile(
 		path.join(root, "canvases.json"),
 		`${JSON.stringify({ canvases }, null, "\t")}\n`,
+	);
+	await fs.writeFile(
+		path.join(root, "docs.json"),
+		`${JSON.stringify({ docs }, null, "\t")}\n`,
+	);
+	await fs.writeFile(
+		path.join(root, "site.json"),
+		`${JSON.stringify({ canvases, docs, logs, exports: exports_ }, null, "\t")}\n`,
 	);
 
 	await fs.rm(outDir, { recursive: true, force: true });
@@ -99,12 +155,32 @@ async function main() {
 	await copyInto(CANVAS_DIR, "canvas");
 
 	try {
+		await fs.access(DOCS_DIR);
+		await copyInto(DOCS_DIR, "docs");
+	} catch {}
+
+	try {
+		await fs.access(LOGS_DIR);
+		await copyInto(LOGS_DIR, "logs");
+	} catch {}
+
+	try {
 		await fs.access(ATTACHMENTS_DIR);
 		await copyInto(ATTACHMENTS_DIR, "attachments");
 	} catch {}
 
-	console.log(`✔ Собрано в dist/ и обновлён canvases.json: ${canvases.length} canvas(ов)`);
-	for (const c of canvases) console.log(`  • ${c.title}  →  /?canvas=${c.slug}`);
+	try {
+		await fs.access(STATIC_DIR);
+		await copyInto(STATIC_DIR, "static");
+	} catch {}
+
+	console.log(
+		`✔ Собрано в dist/, обновлены canvases.json/docs.json/site.json: ${canvases.length} canvas(ов), ${docs.length} док(а)`,
+	);
+	for (const c of canvases)
+		console.log(`  • ${c.title}  →  /?view=canvas&canvas=${c.slug}`);
+	for (const d of docs)
+		console.log(`  • ${d.title}  →  /?view=doc&doc=${d.slug}`);
 }
 
 main().catch((err) => {

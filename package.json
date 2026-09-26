@@ -3,11 +3,8 @@
 	"version": "1.0.0",
 	"private": true,
 	"type": "module",
-	"description": "GitHub Pages для файлов Obsidian .canvas на базе json-canvas-viewer",
 	"scripts": {
-		"build": "node scripts/build.mjs",
-		"serve": "node scripts/serve.mjs",
-		"dev": "node scripts/build.mjs && node scripts/serve.mjs"
+		"build": "node scripts/build.mjs"
 	},
 	"engines": {
 		"node": ">=18"
